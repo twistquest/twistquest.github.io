@@ -1,89 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <script src="https://kit.fontawesome.com/e6dc84fea9.js" crossorigin="anonymous"></script>
-    <style>
-      body {
-        overflow: hidden; /* Prevent scrollbars */
-        background-color: black;
-        display: flex;
-        flex-direction: column;
-        align-items: normal;
-        justify-content: flex-start;
-        height: 100vh;
-        margin: 0;
-        padding-top: 40px;
-      }
-      
-    .header {
-      color: white;
-      font-size: 16px;
-      margin-bottom: 0px;
-      font-family: Arial, sans-serif; 
-      z-index: 2;
-      margin-top: 20px;
-      align-self: center;
-    }
-
-    .subheader {
-        color: white;
-        font-size: 14px;
-        margin-bottom: 15px;
-        font-family: Arial, sans-serif;
-      
-    }
-    
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2;
-      margin-top: 20px;
-    }
-    
-    .button {
-      display: flex;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: black;
-      color: white;
-      border: none;
-      text-align: center;
-      text-decoration: none;
-      font-size: 16px;
-      transition-duration: 0.4s;
-      cursor: pointer;
-      margin-bottom: 5px;
-      font-family: Arial, sans-serif; 
-    }
-    
-    .button:hover {
-      background-color: white;
-      color: black;
-    }
-    
-    .button i {
-      margin-right: 5px;
-      transition-duration: 0.4s;
-      color: white;
-      position: relative;
-      left: -5px;
-    }
-    
-    .button:hover i {
-      color: black;
-    }
-
-    #frame {
-      width: 100%;
-      height: 1250px; /* Height of the canvas */
-      display: block;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 1;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://kit.fontawesome.com/e6dc84fea9.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <canvas id="frame"></canvas>
@@ -107,7 +28,7 @@ function start() {
 	global.w = Math.min(320, Math.round(window.innerWidth / scale));
 	global.h = Math.min(240, Math.round(window.innerHeight / scale));
 
-	// Get and init canvas
+
 	var canvas = document.getElementById('frame');
 	canvas.width = global.w * scale;
 	canvas.height = global.h * scale;
@@ -116,7 +37,7 @@ function start() {
 		ctx.globalCompositeOperation = 'new content';
 	}
 
-	// Init all dots array with zeros except first line
+
 	for (var x = 0; x < global.w; x++) {
 		for (var y = 0; y < global.h; y++) {
 			dots[y * global.w + x] = y == global.h - 1 ? 35 : 0;
@@ -133,7 +54,7 @@ function update() {
 	ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 	ctx.fillRect(0, 0, global.w * scale, global.h * scale);
 
-	/* Move & draw */
+
 	for (var x = 0; x < global.w; x++) {
 		var xp = x * scale;
 		for (var y = 1; y < global.h; y++) {
