@@ -61,4 +61,7 @@ function update() {
 	}
 }
 
-start();
+start(); 
+/* this isnt my function i stole it from codepen 
+but honestly i have no clue whats going on here so i wont bother touchingit 
+itll just stay until i make a new website */
