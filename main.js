@@ -12,6 +12,11 @@ var palette = [
 var global = { w: 0, h: 0 };
 var scale = 4;
 var dots = [];
+let lastFrameTime = performance.now();
+let frameCount = 0;
+let fps = 0;
+
+
 
 
 function start() {
@@ -59,7 +64,22 @@ function update() {
 			ctx.fillRect(xp, y * scale, scale, scale);
 		}
 	}
+	frameCount++;
+	const now = performance.now();
+	const elapsed = now - lastFrameTime
+	if (elapsed >= 1000) {
+		fps = frameCount / (elapsed/1000)
+		frameCount = 0;
+		lastFrameTime = now;
+	}
+
+	if (fps < 30) {
+		canvas.remove()
+	}
 }
+
+
+
 
 start(); 
 /* this isnt my function i stole it from codepen 
