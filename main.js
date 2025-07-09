@@ -15,19 +15,15 @@ let width = 0, height = 0;
 let dots = [];
 let ctx = null;
 let canvas = null;
-
-// FPS tracking
 let lastFpsUpdate = performance.now();
 let frameCount = 0;
 let fps = 0;
-const minFps = 30; // Threshold to disable effect
-
-let running = true; // Control the animation loop
+const minFps = 30;
+let running = true;
 
 function setupCanvas() {
-  width = Math.min(320, Math.round(window.innerWidth / scale));
-  height = Math.min(240, Math.round(window.innerHeight / scale));
-
+  width = Math.min(320, Math.floor(window.innerWidth / scale));
+  height = Math.min(240, Math.floor(window.innerHeight / scale));
   canvas = document.getElementById('frame');
   if (!canvas) {
     canvas = document.createElement('canvas');
@@ -41,7 +37,6 @@ function setupCanvas() {
 
 function initDots() {
   dots = new Array(width * height).fill(0);
-  // Set the bottom row to the hottest color
   for (let x = 0; x < width; x++) {
     dots[(height - 1) * width + x] = palette.length - 1;
   }
@@ -51,10 +46,12 @@ function updateFire() {
   for (let x = 0; x < width; x++) {
     for (let y = 1; y < height; y++) {
       const src = y * width + x;
-      const rand = Math.floor(Math.random() * 3.5); // 0,1,2,3
-      const dst = src - width + (rand - 1); 
+      const rand = Math.floor(Math.random() * 3.5);
+      let dst = src - width + (rand - 1);
+      if (dst < 0) dst = 0;
+      if (dst >= dots.length) dst = dots.length - 1;
       const value = dots[src] - (rand & 1);
-      dots[dst < 0 ? 0 : dst] = value > 0 ? value : 0;
+      dots[dst] = value > 0 ? value : 0;
     }
   }
 }
@@ -63,7 +60,7 @@ function drawFire() {
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       const colorIdx = dots[y * width + x];
-      ctx.fillStyle = palette[colorIdx];
+      ctx.fillStyle = palette[Math.max(0, Math.min(colorIdx, palette.length - 1))];
       ctx.fillRect(x * scale, y * scale, scale, scale);
     }
   }
@@ -71,13 +68,9 @@ function drawFire() {
 
 function loop() {
   if (!running) return;
-
   ctx.clearRect(0, 0, width * scale, height * scale);
-
   updateFire();
   drawFire();
-
-  
   frameCount++;
   const now = performance.now();
   if (now - lastFpsUpdate >= 1000) {
@@ -86,12 +79,12 @@ function loop() {
     lastFpsUpdate = now;
     if (fps < minFps) {
       running = false;
-      canvas.remove();
-      alert('Effect disabled: FPS too low!');
+      if (canvas && canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
       return;
     }
   }
-
   requestAnimationFrame(loop);
 }
 
@@ -105,5 +98,11 @@ function startFireEffect() {
   loop();
 }
 
+window.addEventListener('resize', () => {
+  if (running) {
+    setupCanvas();
+    initDots();
+  }
+});
 
 startFireEffect();
