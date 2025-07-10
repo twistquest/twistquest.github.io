@@ -29,19 +29,19 @@ class FireEffect {
   }
 
   init() {
-    this.width = Math.min(320, Math.round(window.innerWidth / this.scale));
-    this.height = Math.min(240, Math.round(window.innerHeight / this.scale));
-
     this.canvas = document.getElementById('frame');
     if (!this.canvas) {
       console.error('Canvas with id "frame" not found');
       return false;
     }
 
+    this.width = Math.min(320, Math.round(window.innerWidth / this.scale));
+    this.height = Math.min(240, Math.round(window.innerHeight / this.scale));
+
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
-    this.ctx = this.canvas.getContext('2d');
     
+    this.ctx = this.canvas.getContext('2d');
     if (!this.ctx) {
       console.error('Unable to get 2D context');
       return false;
@@ -85,17 +85,19 @@ class FireEffect {
 
   disableEffect() {
     this.effectEnabled = false;
-    this.ctx.fillStyle = '#000000';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    
-    this.ctx.fillStyle = '#ffffff';
-    this.ctx.font = '16px Arial';
-    this.ctx.textAlign = 'center';
-    this.ctx.fillText(
-      'Fire effect disabled due to low FPS', 
-      this.canvas.width / 2, 
-      this.canvas.height / 2
-    );
+    if (this.ctx) {
+      this.ctx.fillStyle = '#000000';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.font = '16px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(
+        'Fire effect disabled due to low FPS', 
+        this.canvas.width / 2, 
+        this.canvas.height / 2
+      );
+    }
   }
 
   enableEffect() {
@@ -128,10 +130,10 @@ class FireEffect {
         const sourceIndex = currentIndex - this.width - drift + 1;
         
         if (sourceIndex >= 0 && sourceIndex < this.dots.length) {
-          this.dots[currentIndex] = this.dots[sourceIndex] - (drift & 2);
+          this.dots[currentIndex] = Math.max(0, this.dots[sourceIndex] - (drift & 2));
         }
 
-        const intensity = Math.max(0, this.dots[currentIndex]);
+        const intensity = this.dots[currentIndex];
         if (intensity > 0) {
           this.ctx.fillStyle = palette[Math.min(intensity, palette.length - 1)];
           this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
@@ -154,5 +156,12 @@ class FireEffect {
   }
 }
 
-const fireEffect = new FireEffect();
-fireEffect.start();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const fireEffect = new FireEffect();
+    fireEffect.start();
+  });
+} else {
+  const fireEffect = new FireEffect();
+  fireEffect.start();
+}
