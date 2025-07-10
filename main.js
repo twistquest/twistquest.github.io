@@ -12,7 +12,7 @@ const palette = [
 
 class FireEffect {
   constructor() {
-    this.scale = 4;
+    this.scale = 4; // Pixel size (larger = chunkier fire, but faster performance)
     this.width = 0;
     this.height = 0;
     this.dots = [];
@@ -35,8 +35,9 @@ class FireEffect {
       return false;
     }
 
-    this.width = Math.min(320, Math.round(window.innerWidth / this.scale));
-    this.height = Math.min(240, Math.round(window.innerHeight / this.scale));
+    // Full screen grid (no min limits for better coverage)
+    this.width = Math.ceil(window.innerWidth / this.scale);
+    this.height = Math.ceil(window.innerHeight / this.scale);
 
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
@@ -47,13 +48,9 @@ class FireEffect {
       return false;
     }
 
-    this.dots = new Array(this.width * this.height);
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        const index = y * this.width + x;
-        this.dots[index] = y === this.height - 1 ? 35 : 0;
-      }
-    }
+    // Initialize dots array
+    this.dots = new Array(this.width * this.height).fill(0);
+    console.log('Canvas initialized with size:', this.canvas.width, 'x', this.canvas.height);
 
     return true;
   }
@@ -102,11 +99,13 @@ class FireEffect {
 
   enableEffect() {
     this.effectEnabled = true;
+    this.resetFire();
+  }
+
+  resetFire() {
+    // Reset bottom row to full intensity
     for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        const index = y * this.width + x;
-        this.dots[index] = y === this.height - 1 ? 35 : 0;
-      }
+      this.dots[(this.height - 1) * this.width + x] = 35;
     }
   }
 
@@ -120,26 +119,37 @@ class FireEffect {
       return;
     }
 
+    // Clear canvas
     this.ctx.fillStyle = '#000000';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 1; y < this.height; y++) {
+    // Refuel the bottom row each frame to keep fire going
+    this.resetFire();
+
+    // Update fire: loop from bottom to top to avoid overwriting
+    for (let y = this.height - 2; y >= 0; y--) {  // Start from second-to-bottom, go up
+      for (let x = 0; x < this.width; x++) {
         const drift = Math.round(Math.random() * 3);
         const currentIndex = y * this.width + x;
-        const sourceIndex = currentIndex - this.width - drift + 1;
+        let sourceIndex = (y + 1) * this.width + x - drift + 1;  // Source from below with drift
         
-        if (sourceIndex >= 0 && sourceIndex < this.dots.length) {
-          this.dots[currentIndex] = Math.max(0, this.dots[sourceIndex] - (drift & 2));
+        // Bounds check
+        if (sourceIndex < 0 || sourceIndex >= this.dots.length) {
+          sourceIndex = (y + 1) * this.width + x;  // Fallback to direct below
         }
+        
+        const decay = (drift & 2) + Math.random() * 2;  // Slight random decay for realism
+        this.dots[currentIndex] = Math.max(0, this.dots[sourceIndex] - decay);
 
-        const intensity = this.dots[currentIndex];
+        const intensity = Math.floor(this.dots[currentIndex]);
         if (intensity > 0) {
           this.ctx.fillStyle = palette[Math.min(intensity, palette.length - 1)];
           this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
         }
       }
     }
+
+    console.log('Frame updated - FPS:', this.fps.toFixed(1));  // Debug log
 
     requestAnimationFrame(() => this.update());
   }
@@ -156,6 +166,7 @@ class FireEffect {
   }
 }
 
+// Run when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     const fireEffect = new FireEffect();
