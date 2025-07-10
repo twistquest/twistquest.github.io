@@ -10,99 +10,149 @@ const palette = [
   '#cfcf6f', '#dfdf9f', '#efefc7', '#ffffff'
 ];
 
-const scale = 4;
-let width = 0, height = 0;
-let dots = [];
-let ctx = null;
-let canvas = null;
-let lastFpsUpdate = performance.now();
-let frameCount = 0;
-let fps = 0;
-const minFps = 30;
-let running = true;
-
-function setupCanvas() {
-  width = Math.min(320, Math.floor(window.innerWidth / scale));
-  height = Math.min(240, Math.floor(window.innerHeight / scale));
-  canvas = document.getElementById('frame');
-  if (!canvas) {
-    canvas = document.createElement('canvas');
-    canvas.id = 'frame';
-    document.body.appendChild(canvas);
+class FireEffect {
+  constructor() {
+    this.scale = 4;
+    this.width = 0;
+    this.height = 0;
+    this.dots = [];
+    this.ctx = null;
+    this.canvas = null;
+    this.isRunning = false;
+    this.effectEnabled = true;
+    
+    this.lastFrameTime = performance.now();
+    this.frameCount = 0;
+    this.fps = 60;
+    this.fpsHistory = [];
+    this.maxFpsHistory = 10;
   }
-  canvas.width = width * scale;
-  canvas.height = height * scale;
-  ctx = canvas.getContext('2d');
-}
 
-function initDots() {
-  dots = new Array(width * height).fill(0);
-  for (let x = 0; x < width; x++) {
-    dots[(height - 1) * width + x] = palette.length - 1;
-  }
-}
+  init() {
+    this.width = Math.min(320, Math.round(window.innerWidth / this.scale));
+    this.height = Math.min(240, Math.round(window.innerHeight / this.scale));
 
-function updateFire() {
-  for (let x = 0; x < width; x++) {
-    for (let y = 1; y < height; y++) {
-      const src = y * width + x;
-      const rand = Math.floor(Math.random() * 3.5);
-      let dst = src - width + (rand - 1);
-      if (dst < 0) dst = 0;
-      if (dst >= dots.length) dst = dots.length - 1;
-      const value = dots[src] - (rand & 1);
-      dots[dst] = value > 0 ? value : 0;
+    this.canvas = document.getElementById('frame');
+    if (!this.canvas) {
+      console.error('Canvas with id "frame" not found');
+      return false;
     }
-  }
-}
 
-function drawFire() {
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
-      const colorIdx = dots[y * width + x];
-      ctx.fillStyle = palette[Math.max(0, Math.min(colorIdx, palette.length - 1))];
-      ctx.fillRect(x * scale, y * scale, scale, scale);
+    this.canvas.width = this.width * this.scale;
+    this.canvas.height = this.height * this.scale;
+    this.ctx = this.canvas.getContext('2d');
+    
+    if (!this.ctx) {
+      console.error('Unable to get 2D context');
+      return false;
     }
-  }
-}
 
-function loop() {
-  if (!running) return;
-  ctx.clearRect(0, 0, width * scale, height * scale);
-  updateFire();
-  drawFire();
-  frameCount++;
-  const now = performance.now();
-  if (now - lastFpsUpdate >= 1000) {
-    fps = frameCount / ((now - lastFpsUpdate) / 1000);
-    frameCount = 0;
-    lastFpsUpdate = now;
-    if (fps < minFps) {
-      running = false;
-      if (canvas && canvas.parentNode) {
-        canvas.parentNode.removeChild(canvas);
+    this.dots = new Array(this.width * this.height);
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const index = y * this.width + x;
+        this.dots[index] = y === this.height - 1 ? 35 : 0;
       }
+    }
+
+    return true;
+  }
+
+  updateFPS() {
+    this.frameCount++;
+    const now = performance.now();
+    const elapsed = now - this.lastFrameTime;
+    
+    if (elapsed >= 1000) {
+      const currentFps = this.frameCount / (elapsed / 1000);
+      
+      this.fpsHistory.push(currentFps);
+      if (this.fpsHistory.length > this.maxFpsHistory) {
+        this.fpsHistory.shift();
+      }
+      
+      this.fps = this.fpsHistory.reduce((a, b) => a + b, 0) / this.fpsHistory.length;
+      
+      if (this.fps < 30 && this.effectEnabled) {
+        console.log(`FPS too low (${this.fps.toFixed(1)}), disabling fire effect`);
+        this.disableEffect();
+      }
+      
+      this.frameCount = 0;
+      this.lastFrameTime = now;
+    }
+  }
+
+  disableEffect() {
+    this.effectEnabled = false;
+    this.ctx.fillStyle = '#000000';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.font = '16px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText(
+      'Fire effect disabled due to low FPS', 
+      this.canvas.width / 2, 
+      this.canvas.height / 2
+    );
+  }
+
+  enableEffect() {
+    this.effectEnabled = true;
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const index = y * this.width + x;
+        this.dots[index] = y === this.height - 1 ? 35 : 0;
+      }
+    }
+  }
+
+  update() {
+    if (!this.ctx || !this.isRunning) return;
+
+    this.updateFPS();
+
+    if (!this.effectEnabled) {
+      requestAnimationFrame(() => this.update());
       return;
     }
+
+    this.ctx.fillStyle = '#000000';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 1; y < this.height; y++) {
+        const drift = Math.round(Math.random() * 3);
+        const currentIndex = y * this.width + x;
+        const sourceIndex = currentIndex - this.width - drift + 1;
+        
+        if (sourceIndex >= 0 && sourceIndex < this.dots.length) {
+          this.dots[currentIndex] = this.dots[sourceIndex] - (drift & 2);
+        }
+
+        const intensity = Math.max(0, this.dots[currentIndex]);
+        if (intensity > 0) {
+          this.ctx.fillStyle = palette[Math.min(intensity, palette.length - 1)];
+          this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
+        }
+      }
+    }
+
+    requestAnimationFrame(() => this.update());
   }
-  requestAnimationFrame(loop);
+
+  start() {
+    if (this.init()) {
+      this.isRunning = true;
+      this.update();
+    }
+  }
+
+  stop() {
+    this.isRunning = false;
+  }
 }
 
-function startFireEffect() {
-  setupCanvas();
-  initDots();
-  running = true;
-  lastFpsUpdate = performance.now();
-  frameCount = 0;
-  fps = 0;
-  loop();
-}
-
-window.addEventListener('resize', () => {
-  if (running) {
-    setupCanvas();
-    initDots();
-  }
-});
-
-startFireEffect();
+const fireEffect = new FireEffect();
+fireEffect.start();
