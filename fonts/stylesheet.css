@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Munro Narrow';
+    src: url('MunroNarrow.woff2') format('woff2'),
+        url('MunroNarrow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Munro';
+    src: url('Munro.woff2') format('woff2'),
+        url('Munro.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Munro Small';
+    src: url('MunroSmall.woff2') format('woff2'),
+        url('MunroSmall.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
