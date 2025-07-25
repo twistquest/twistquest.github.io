@@ -21,8 +21,10 @@ async function fetchSongData() {
     songArtist.textContent = track.artist["#text"];
     if (track["@attr"] && track["@attr"].nowplaying === "true") {
       songStatus.textContent = "Playing";
+      songStatus.style.color = "green";
     } else {
       songStatus.textContent = `Last played at ${track.date["#text"]}`;
+      songStatus.style.color = "red";
     }
   }
 }
