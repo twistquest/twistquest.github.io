@@ -30,7 +30,7 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(400px, 3fr) 1fr;
     grid-template-rows: 1fr 2fr;
     gap: 10px;
     width: 100%;
