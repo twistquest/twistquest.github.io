@@ -15,14 +15,16 @@ async function fetchSongData() {
     else {
         const data = await response.json();
         const track = data.recenttracks.track[0];
-        albumCover.src = track.image[2]['#text'];
+        albumCover.src = track.image[2]["#text"];
         songTitle.textContent = track.name;
-        songArtist.textContent = track.artist['#text'];
-        if (track['@attr'] && track['@attr'].nowplaying === "true") {
-            songStatus.textContent = "Playing";
+        songArtist.textContent = track.artist["#text"];
+        if (track["@attr"] && track["@attr"].nowplaying === "true") {
+            songStatus.textContent = "Now Playing";
+            songStatus.style.color = "#a6e3a1";
         }
         else {
-            songStatus.textContent = `Last played at ${track.date['#text']}`;
+            songStatus.textContent = `Last played at ${track.date["#text"]}`;
+            songStatus.style.color = "#eba0ac";
         }
     }
 }
