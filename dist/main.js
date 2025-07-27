@@ -6,6 +6,22 @@ const songStatus = document.getElementById("song-status");
 async function fetchSongData() {
     const response = await fetch("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=holetohades&api_key=9065aa245c87c2609c4270c0935ab7b5&format=json&limit=1");
     // please dont steal my key for nefarious purpouses
+    function getDate(uts) {
+        const date = Date.now();
+        const playedDate = new Date(Number(uts) * 1000).getTime();
+        const diff = date - playedDate;
+        const timeSince = diff / 86400000;
+        const timeSinceDays = Math.floor(timeSince);
+        if (timeSinceDays === 0) {
+            return "today";
+        }
+        else if (timeSinceDays === 1) {
+            return "yesterday";
+        }
+        else {
+            return `${timeSinceDays} days ago`;
+        }
+    }
     if (!response.ok) {
         songTitle.textContent = `Error ${response.status} ${response.statusText} (this isnt my fault its lastfm i swear)`;
         songArtist.textContent = "";
@@ -23,7 +39,7 @@ async function fetchSongData() {
             songStatus.style.color = "#a6e3a1";
         }
         else {
-            songStatus.textContent = `Last played at ${track.date["#text"]}`;
+            songStatus.textContent = `Last played ${getDate(track.date.uts)}`;
             songStatus.style.color = "#eba0ac";
         }
     }
