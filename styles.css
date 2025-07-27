@@ -65,6 +65,45 @@ body {
 .item4 {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
+    font-size: 1.5rem;
+}
+
+#song-title {
+    margin-top: 1rem;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 30px;
+}
+
+#song-artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.5rem;
+}
+
+#song-status {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+a:link {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+a:active {
+    color: #cba6f7;
+}
+
+a:hover {
+    color: #cba6f7;
 }
 
 .pixel-corners,
