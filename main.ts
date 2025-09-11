@@ -2,7 +2,6 @@ const albumCover = document.getElementById("album-cover") as HTMLImageElement;
 const songTitle = document.getElementById("song-title") as HTMLElement;
 const songArtist = document.getElementById("song-artist") as HTMLElement;
 const songStatus = document.getElementById("song-status") as HTMLElement;
-const profile = document.getElementById("profile") as HTMLImageElement;
 
 async function fetchSongData() {
   const response = await fetch(
