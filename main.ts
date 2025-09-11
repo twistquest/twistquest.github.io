@@ -37,7 +37,7 @@ async function fetchSongData() {
       songStatus.textContent = "Now Playing";
       songStatus.style.color = "#a6e3a1";
     } else {
-      songStatus.textContent = `Last played ${getDate(track.date.uts)}`;
+      songStatus.textContent = `Last played: ${getDate(track.date.uts)}`;
       songStatus.style.color = "#eba0ac";
     }
   }

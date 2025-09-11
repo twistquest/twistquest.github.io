@@ -17,6 +17,7 @@ body {
     align-items: flex-start;
     gap: 2rem;
     margin-right: 15px;
+    max-width: 25vw;
 }
 
 .lastplaying img {
@@ -75,6 +76,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 30px;
+    max-width: 9.375rem;
 }
 
 #song-artist {
@@ -82,12 +84,12 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0.5rem;
+    max-width: 100%;
 }
 
 #song-status {
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 a:link {
