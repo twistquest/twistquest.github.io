@@ -5,7 +5,10 @@ body {
     font-family: "Munro";
     padding-left: 15vw;
     padding-right: 15vw;
+    margin: 0;
+    overflow: hidden;
 }
+
 .headertext {
     font-weight: 400;
     margin-bottom: 8px;
@@ -16,32 +19,29 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 2rem;
-    margin-right: 15px;
-    max-width: 25vw;
+    margin: 15px;
+    max-width: 35vw;
 }
 
 .lastplaying img {
     width: 120px;
     height: 120px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 15%;
     background-color: #fff;
-    margin-left: 15px;
 }
 
 .container {
     display: grid;
-    grid-template-columns: minmax(400px, 3fr) 1fr;
+    grid-template-columns: minmax(400px, 3fr) 1.5fr;
     grid-template-rows: 1fr 2fr;
     gap: 10px;
     width: 100%;
-    height: 90vh;
+    height: calc(90vh - 10px);
     color: white;
 }
-
 .item {
     background-color: black;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,9 +51,26 @@ body {
 .item1 {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.item1 div {
+#profile {
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+    border-radius: 15%;
+}
+
+.item1 div:first-child {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.item1 div:last-child {
     margin: 20px;
 }
 
@@ -67,6 +84,9 @@ body {
     grid-row: 2 / 3;
 }
 
+.item3 div {
+    margin: 20px;
+}
 .item4 {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
@@ -77,13 +97,12 @@ body {
 }
 
 #song-title {
-    margin-top: 1rem;
-    margin-bottom: 0.2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 30px;
-    max-width: 9.375rem;
+
+    margin: 1rem 0.2rem 0.2rem 0;
 }
 
 #song-artist {
@@ -91,12 +110,14 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0.5rem;
-    max-width: 100%;
+    max-width: 9.375rem;
 }
 
 #song-status {
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 9.375rem;
 }
 
 a:link {

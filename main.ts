@@ -2,6 +2,7 @@ const albumCover = document.getElementById("album-cover") as HTMLImageElement;
 const songTitle = document.getElementById("song-title") as HTMLElement;
 const songArtist = document.getElementById("song-artist") as HTMLElement;
 const songStatus = document.getElementById("song-status") as HTMLElement;
+const profile = document.getElementById("profile") as HTMLImageElement;
 
 async function fetchSongData() {
   const response = await fetch(
@@ -26,7 +27,7 @@ async function fetchSongData() {
     songTitle.textContent = `Error ${response.status} ${response.statusText} (this isnt my fault its lastfm i swear)`;
     songArtist.textContent = "";
     songStatus.textContent = "";
-    albumCover.src = "yum.webp";
+    albumCover.src = "img/yum.webp";
   } else {
     const data = await response.json();
     const track = data.recenttracks.track[0];

@@ -3,6 +3,7 @@ const albumCover = document.getElementById("album-cover");
 const songTitle = document.getElementById("song-title");
 const songArtist = document.getElementById("song-artist");
 const songStatus = document.getElementById("song-status");
+const profile = document.getElementById("profile");
 async function fetchSongData() {
     const response = await fetch("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=holetohades&api_key=9065aa245c87c2609c4270c0935ab7b5&format=json&limit=1");
     // please dont steal my key for nefarious purpouses
@@ -26,7 +27,7 @@ async function fetchSongData() {
         songTitle.textContent = `Error ${response.status} ${response.statusText} (this isnt my fault its lastfm i swear)`;
         songArtist.textContent = "";
         songStatus.textContent = "";
-        albumCover.src = "yum.webp";
+        albumCover.src = "img/yum.webp";
     }
     else {
         const data = await response.json();
