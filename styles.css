@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background-color: #11111b;
     padding-top: 5vh;
     padding-bottom: 5vh;
     font-family: "Munro";
@@ -28,7 +28,7 @@ body {
     height: 7.5rem;
     object-fit: cover;
     border-radius: 15%;
-    background-color: #fff;
+    background-color: #cdd6f4;
 }
 
 .container {
@@ -38,10 +38,10 @@ body {
     gap: 0.625rem;
     width: 100%;
     height: calc(90vh - 0.625rem);
-    color: white;
+    color: #cdd6f4;
 }
 .item {
-    background-color: black;
+    background-color: #11111b;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -122,11 +122,11 @@ body {
 }
 
 a:link {
-    color: white;
+    color: #cdd6f4;
 }
 
 a:visited {
-    color: white;
+    color: #cdd6f4;
 }
 
 a:active {
@@ -297,7 +297,7 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    background: #ffffff;
+    background: #cdd6f4;
     display: block;
     pointer-events: none;
 }
@@ -549,6 +549,35 @@ a:hover {
     .item4 a {
         margin: 0 0.1875rem;
         font-size: 0.875rem;
+    }
+}
+
+.gradient-marquee {
+    animation: rainbow 12.5s linear infinite;
+    font-weight: inherit;
+}
+
+@keyframes rainbow {
+    0% {
+        color: #f38ba8;
+    }
+    16.66% {
+        color: #fab387;
+    }
+    33.33% {
+        color: #f9e2af;
+    }
+    50% {
+        color: #94e2d5;
+    }
+    66.66% {
+        color: #89dceb;
+    }
+    83.33% {
+        color: #89b4fa;
+    }
+    100% {
+        color: #f38ba8;
     }
 }
 
