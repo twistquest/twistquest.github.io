@@ -101,7 +101,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 1.875rem;
+    max-width: 9.375rem;
 
     margin: 1rem 0.2rem 0.2rem 0;
 }
