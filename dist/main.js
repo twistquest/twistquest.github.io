@@ -3,7 +3,6 @@ const albumCover = document.getElementById("album-cover");
 const songTitle = document.getElementById("song-title");
 const songArtist = document.getElementById("song-artist");
 const songStatus = document.getElementById("song-status");
-const profile = document.getElementById("profile");
 async function fetchSongData() {
     const response = await fetch("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=holetohades&api_key=9065aa245c87c2609c4270c0935ab7b5&format=json&limit=1");
     // please dont steal my key for nefarious purpouses
@@ -34,6 +33,7 @@ async function fetchSongData() {
         const track = data.recenttracks.track[0];
         albumCover.src = track.image[2]["#text"];
         songTitle.textContent = track.name;
+        songTitle.title = track.name;
         songArtist.textContent = track.artist["#text"];
         if (track["@attr"] && track["@attr"].nowplaying === "true") {
             songStatus.textContent = "Now Playing";

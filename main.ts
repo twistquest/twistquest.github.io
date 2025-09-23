@@ -32,6 +32,7 @@ async function fetchSongData() {
     const track = data.recenttracks.track[0];
     albumCover.src = track.image[2]["#text"];
     songTitle.textContent = track.name;
+    songTitle.title = track.name;
     songArtist.textContent = track.artist["#text"];
     if (track["@attr"] && track["@attr"].nowplaying === "true") {
       songStatus.textContent = "Now Playing";
