@@ -1,12 +1,16 @@
 body {
   background-color: #11111b;
+  --site-font-size: clamp(0.75rem, 2.2vmin, 1.5rem);
   padding-top: 5vh;
   padding-bottom: 5vh;
   font-family: "Munro";
+  font-size: var(--site-font-size);
   padding-left: 15vw;
   padding-right: 15vw;
   margin: 0;
   overflow: hidden;
+  box-sizing: border-box;
+  min-height: 100vh;
   color: #cdd6f4;
 }
 
@@ -32,8 +36,8 @@ body {
 }
 
 .lastplaying img {
-  width: 10rem;
-  height: 10rem;
+  width: min(7.5rem, 18vh);
+  height: min(7.5rem, 18vh);
   object-fit: cover;
   border-radius: 15%;
   background-color: #cdd6f4;
@@ -43,7 +47,7 @@ body {
 .container {
   display: grid;
   grid-template-columns: minmax(25rem, 3fr) minmax(0, 1.5fr);
-  grid-template-rows: 1fr 2fr;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 2fr);
   gap: 0.625rem;
   width: 100%;
   height: calc(90vh - 0.625rem);
@@ -55,6 +59,8 @@ body {
   justify-content: center;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: visible;
 }
 
 .item1 {
@@ -63,24 +69,44 @@ body {
   display: flex;
   align-items: center;
   gap: 0.9375rem;
+  padding-block: 1.25rem;
+  box-sizing: border-box;
 }
 
 #profile {
-  width: 12.5rem;
-  height: 12.5rem;
-  flex-shrink: 0;
+  display: block;
+  width: min(12.5rem, 22vh);
+  height: min(12.5rem, 22vh);
+  aspect-ratio: 1;
+  object-fit: cover;
+  flex-shrink: 1;
   border-radius: 15%;
 }
 
-.item1 div:first-child {
+.item1 > div {
   margin: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.9375rem;
 }
 
-.item1 div:last-child {
-  margin: 1.25rem;
+.item1 > div > div:first-child {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.item1 > div > div:last-child {
+  margin: 0 1.25rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.item1 > div > div:last-child p {
+  margin: 0.6em 0;
+}
+
+.item1 > div > div:last-child p:last-child {
+  margin-bottom: 0;
 }
 
 .item2 {
@@ -110,7 +136,7 @@ body {
   gap: 0.5rem;
   p,
   a {
-    font-size: 1.5rem;
+    font-size: var(--site-font-size);
   }
   h1,
   p {
@@ -134,9 +160,8 @@ body {
 }
 
 #song-status {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: break-word;
   width: 100%;
 }
 
@@ -361,8 +386,8 @@ a:hover {
   }
 
   .lastplaying img {
-    width: 7.5rem;
-    height: 7.5rem;
+    width: min(6rem, 18vh);
+    height: min(6rem, 18vh);
   }
 }
 
@@ -377,8 +402,8 @@ a:hover {
   }
 
   #profile {
-    width: 10rem;
-    height: 10rem;
+    width: min(10rem, 22vh);
+    height: min(10rem, 22vh);
   }
 }
 
@@ -397,6 +422,10 @@ a:hover {
     grid-template-rows: auto auto;
     height: auto;
     gap: 0.9375rem;
+  }
+
+  .item {
+    overflow: visible;
   }
 
   .item1 {
@@ -419,14 +448,14 @@ a:hover {
     grid-row: 3;
   }
 
-  .item1 div:first-child {
+  .item1 > div {
     flex-direction: column;
     text-align: center;
     gap: 0.625rem;
     margin: 0.9375rem;
   }
 
-  .item1 div:last-child {
+  .item1 > div > div:last-child {
     margin: 0.9375rem;
     text-align: center;
   }
@@ -497,6 +526,10 @@ a:hover {
     gap: 0.625rem;
   }
 
+  .item {
+    overflow: visible;
+  }
+
   .item1,
   .item2,
   .item3,
@@ -521,14 +554,14 @@ a:hover {
     grid-row: 4;
   }
 
-  .item1 div:first-child {
+  .item1 > div {
     flex-direction: column;
     text-align: center;
     gap: 0.625rem;
     margin: 0.625rem;
   }
 
-  .item1 div:last-child {
+  .item1 > div > div:last-child {
     margin: 0.625rem;
     text-align: center;
   }
@@ -609,11 +642,5 @@ a:hover {
   }
   100% {
     color: #f38ba8;
-  }
-}
-
-@media (min-width: 480px) {
-  body {
-    font-size: 1.5rem;
   }
 }
